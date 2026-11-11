@@ -9,28 +9,26 @@ if (file_exists($file)) {
 }
 
 $id = (int) ($_GET["id"] ?? 0);
-$clientIndex = null;
+$index = null;
 
-foreach ($clients as $index => $client) {
+foreach ($clients as $key => $client) {
     if ((int) $client["id"] === $id) {
-        $clientIndex = $index;
+        $index = $key;
         break;
     }
 }
 
-if ($clientIndex === null) {
+if ($index === null) {
     die("Client introuvable.");
 }
-
-$client = $clients[$clientIndex];
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $nom = trim($_POST["nom"] ?? "");
     $email = trim($_POST["email"] ?? "");
 
     if ($nom !== "" && filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $clients[$clientIndex]["nom"] = $nom;
-        $clients[$clientIndex]["email"] = $email;
+        $clients[$index]["nom"] = $nom;
+        $clients[$index]["email"] = $email;
 
         file_put_contents(
             $file,
@@ -40,9 +38,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         header("Location: clients.php");
         exit;
     }
-
-    $error = "Veuillez saisir un nom et un email valide.";
 }
+
+$client = $clients[$index];
 ?>
 
 <!DOCTYPE html>
@@ -55,28 +53,35 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <h1>Modifier un client</h1>
 
-    <?php if (isset($error)): ?>
-        <p><?= htmlspecialchars($error) ?></p>
-    <?php endif; ?>
-
     <form method="POST">
-        <label>Nom :</label>
-        <input type="text" name="nom"
-               value="<?= htmlspecialchars($client["nom"]) ?>" required>
+
+        <label for="nom">Nom :</label>
+        <input
+            type="text"
+            id="nom"
+            name="nom"
+            value="<?= htmlspecialchars($client["nom"]) ?>"
+            required
+        >
 
         <br><br>
 
-        <label>Email :</label>
-        <input type="email" name="email"
-               value="<?= htmlspecialchars($client["email"]) ?>" required>
+        <label for="email">Email :</label>
+        <input
+            type="email"
+            id="email"
+            name="email"
+            value="<?= htmlspecialchars($client["email"]) ?>"
+            required
+        >
 
         <br><br>
 
         <button type="submit">Enregistrer</button>
+
     </form>
 
-    <br>
-    <a href="clients.php">Retour à la liste</a>
+    <a href="clients.php">Retour</a>
 
 </body>
 </html>

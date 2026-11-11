@@ -13,9 +13,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = trim($_POST["email"] ?? "");
 
     if ($nom !== "" && filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $id = count($clients) > 0
-            ? max(array_column($clients, "id")) + 1
-            : 1;
+        $ids = array_column($clients, "id");
+        $id = empty($ids) ? 1 : max($ids) + 1;
 
         $clients[] = [
             "id" => $id,
@@ -31,8 +30,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         header("Location: clients.php");
         exit;
     }
-
-    $error = "Veuillez saisir un nom et un email valide.";
 }
 ?>
 
@@ -46,26 +43,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <h1>Ajouter un client</h1>
 
-    <?php if (isset($error)): ?>
-        <p><?= htmlspecialchars($error) ?></p>
-    <?php endif; ?>
-
     <form method="POST">
-        <label>Nom :</label>
-        <input type="text" name="nom" required>
+
+        <label for="nom">Nom :</label>
+        <input type="text" id="nom" name="nom" required>
 
         <br><br>
 
-        <label>Email :</label>
-        <input type="email" name="email" required>
+        <label for="email">Email :</label>
+        <input type="email" id="email" name="email" required>
 
         <br><br>
 
         <button type="submit">Ajouter</button>
+
     </form>
 
-    <br>
-    <a href="clients.php">Retour à la liste</a>
+    <a href="clients.php">Retour</a>
 
 </body>
 </html>
