@@ -20,4 +20,5 @@ sonar-scanner \
   -Dsonar.projectName=Portail-Clients \
   -Dsonar.sources=index.html,css,js,php \
   -Dsonar.sourceEncoding=UTF-8 \
+  -Dsonar.qualitygate.wait=true \
   -Dsonar.host.url=https://sonarcloud.io
