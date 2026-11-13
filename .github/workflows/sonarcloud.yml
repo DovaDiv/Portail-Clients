@@ -1,0 +1,28 @@
+name: SonarQube Cloud Analysis
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  sonar-analysis:
+    name: SonarQube Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install unzip and curl
+        run: sudo apt-get update && sudo apt-get install -y unzip curl
+
+      - name: Run SonarQube analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: bash ci/sonar-scan.sh
